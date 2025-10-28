@@ -1,0 +1,19 @@
+{
+  "name": "aluguel-de-trajes-finos",
+  "version": "1.0.0",
+  "description": "API REST para gestão de aluguel de trajes finos (in-memory)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "generated",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "swagger-ui-express": "^4.6.3",
+    "uuid": "^9.0.0"
+  }
+}

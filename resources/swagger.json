@@ -1,0 +1,292 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Aluguel de Trajes Finos API",
+    "version": "1.0.0",
+    "description": "API REST para gestão de aluguel de trajes finos (in-memory)."
+  },
+  "servers": [{"url": "http://localhost:3000"}],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {"type": "string"},
+          "password": {"type": "string"}
+        },
+        "required": ["email","password"]
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {"type": "string"},
+          "user": {"$ref": "#/components/schemas/User"}
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {"type":"string"},
+          "username": {"type":"string"},
+          "email": {"type":"string"},
+          "role": {"type":"string","enum":["administrador","atendente","alfaiate"]}
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "properties": {
+          "username": {"type": "string"},
+          "email": {"type": "string"},
+          "password": {"type": "string"},
+          "role": {"type": "string", "enum": ["administrador","atendente","alfaiate"]}
+        },
+        "required": ["username","email","password","role"]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {"type":"string"},
+          "category": {"type":"string"},
+          "type": {"type":"string"},
+          "characteristics": {"type":"object"}
+        }
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": {"type":"string"},
+          "name": {"type":"string"},
+          "cpf_cnpj": {"type":"string"},
+          "phones": {"type":"array","items":{"type":"string"}},
+          "cep": {"type":"string"},
+          "state": {"type":"string"},
+          "city": {"type":"string"},
+          "logradouro": {"type":"string"},
+          "numero": {"type":"string"},
+          "active": {"type":"boolean"},
+          "typePessoa": {"type":"string","enum":["Física","Jurídica"]}
+        }
+      },
+      "OrderProduct": {
+        "type": "object",
+        "properties": {
+          "id": {"type":"string"},
+          "description": {"type":"string"},
+          "adjustments": {"type":"string"},
+          "characteristics": {"type":"object"}
+        }
+      },
+      "Order": {
+        "type": "object",
+        "properties": {
+          "id": {"type":"string"},
+          "orderNumber": {"type":"integer"},
+          "orderName": {"type":"string"},
+          "clientName": {"type":"string"},
+          "eventDate": {"type":"string","format":"date"},
+          "pickupDateTime": {"type":"string","format":"date-time"},
+          "measureDateTime": {"type":"string","format":"date-time"},
+          "products": {"type":"array","items":{"$ref":"#/components/schemas/OrderProduct"}},
+          "generalObservations": {"type":"string"},
+          "paymentStatus": {"type":"string","enum":["Quitado","Não quitado"]},
+          "paidValue": {"type":"number","minimum":0.01},
+          "paymentForm": {"type":"string","enum":["CREDITO","DEBITO","PIX","DINHEIRO"]},
+          "status": {"type":"string","enum":["Pedido cadastrado","Na costura","Fazendo","Entregar para o cliente","Entregue para o cliente","Devolvido pelo cliente","Cancelado"]},
+          "createdBy": {"type":"object"},
+          "updatedBy": {"type":"object"},
+          "auditLog": {"type":"array","items":{"type":"object"}},
+          "flags": {"type":"object"}
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {"type":"string"}
+        }
+      }
+    }
+  },
+  "security": [{"bearerAuth": []}],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoginRequest"}}}},
+        "responses": {
+          "200": {"description": "Token gerado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoginResponse"}}}},
+          "400": {"description": "Dados obrigatórios ausentes","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Credenciais inválidas","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "Criar usuário (admin)",
+        "security": [{"bearerAuth":[]}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateUserRequest"}}}},
+        "responses": {
+          "201": {"description": "Usuário criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},
+          "400": {"description": "Dados obrigatórios ausentes ou email já cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/products": {
+      "post": {
+        "summary": "Cadastrar produto (admin)",
+        "security": [{"bearerAuth":[]}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+        "responses": {
+          "201": {"description": "Produto criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "get": {
+        "summary": "Listar produtos (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "responses": {
+          "200": {"description": "Lista de produtos","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Product"}}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Buscar produto por id (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "responses": {
+          "200": {"description": "Produto encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+          "404": {"description": "Produto não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "put": {
+        "summary": "Editar produto (admin)",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+        "responses": {
+          "200": {"description": "Produto atualizado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+          "404": {"description": "Produto não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/clients": {
+      "post": {
+        "summary": "Cadastrar cliente (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Client"}}}},
+        "responses": {
+          "201": {"description": "Cliente criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Client"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "summary": "Buscar cliente por id (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "responses": {
+          "200": {"description": "Cliente encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Client"}}}},
+          "404": {"description": "Cliente não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "put": {
+        "summary": "Editar cliente (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Client"}}}},
+        "responses": {
+          "200": {"description": "Cliente atualizado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Client"}}}},
+          "404": {"description": "Cliente não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "Listar pedidos (admin/atendente/alfaiate)",
+        "security": [{"bearerAuth":[]}],
+        "responses": {
+          "200": {"description": "Lista de pedidos","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Order"}}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "post": {
+        "summary": "Cadastrar pedido (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+        "responses": {
+          "201": {"description": "Pedido criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+          "400": {"description": "Dados obrigatórios ausentes ou regras de negócio violadas","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "summary": "Buscar detalhes do pedido (admin/atendente/alfaiate)",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "responses": {
+          "200": {"description": "Pedido encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+          "404": {"description": "Pedido não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "put": {
+        "summary": "Editar pedido (admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+        "responses": {
+          "200": {"description": "Pedido atualizado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+          "400": {"description": "Regras de negócio violadas","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "404": {"description": "Pedido não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/orders/{id}/alfaiate": {
+      "patch": {
+        "summary": "Alfaiate altera status para Fazendo/Entregar para o cliente ou edita observações gerais",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
+        "requestBody": {"content":{"application/json":{"schema":{"type":"object","properties":{"status":{"type":"string","enum":["Fazendo","Entregar para o cliente"]},"generalObservations":{"type":"string"}}}}}},
+        "responses": {
+          "200": {"description": "Pedido atualizado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+          "400": {"description": "Regras de negócio violadas","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "404": {"description": "Pedido não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
+    },
+    "/docs": {
+      "get": {"summary":"Swagger UI"}
+    }
+  }
+}
