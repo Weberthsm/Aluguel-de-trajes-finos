@@ -52,16 +52,19 @@
       "Product": {
         "type": "object",
         "properties": {
-          "id": {"type":"string"},
-          "category": {"type":"string"},
-          "type": {"type":"string"},
-          "characteristics": {"type":"object"}
-        }
+          "category": {"type":"string","description":"Categoria do produto (Roupas, Acessórios)"},
+          "gender": {"type":"string","description":"Masculino ou Feminino"},
+          "type": {"type":"string","description":"Tipo principal do produto (Vestido, Calça, Bolsa, etc)"},
+          "subtype": {"type":"string","description":"Subtipo (Longo, Curto, Tradicional, Borboleta, etc)"},
+          "name": {"type":"string","description":"Nome do produto"},
+          "characteristics": {"type":"object","description":"Características flexíveis do produto (modelo, cor, corte, tamanho, marca, etc)"},
+          "classification": {"type":"string","description":"Adulto ou Infantil"}
+        },
+        "required": ["category","type","name","characteristics"]
       },
       "Client": {
         "type": "object",
         "properties": {
-          "id": {"type":"string"},
           "name": {"type":"string"},
           "cpf_cnpj": {"type":"string"},
           "phones": {"type":"array","items":{"type":"string"}},
@@ -72,16 +75,18 @@
           "numero": {"type":"string"},
           "active": {"type":"boolean"},
           "typePessoa": {"type":"string","enum":["Física","Jurídica"]}
-        }
+        },
+        "required": ["name","phones","cep","state","city","logradouro","numero","typePessoa"]
       },
       "OrderProduct": {
         "type": "object",
         "properties": {
-          "id": {"type":"string"},
+          "productId": {"type":"string"},
           "description": {"type":"string"},
           "adjustments": {"type":"string"},
           "characteristics": {"type":"object"}
-        }
+        },
+        "required": ["productId"]
       },
       "Order": {
         "type": "object",
@@ -104,6 +109,22 @@
           "auditLog": {"type":"array","items":{"type":"object"}},
           "flags": {"type":"object"}
         }
+      },
+      "CreateOrderRequest": {
+        "type": "object",
+        "properties": {
+          "orderName": {"type":"string"},
+          "clientId": {"type":"string"},
+          "eventDate": {"type":"string","format":"date"},
+          "pickupDateTime": {"type":"string","format":"date-time"},
+          "measureDateTime": {"type":"string","format":"date-time"},
+          "products": {"type":"array","items":{"$ref":"#/components/schemas/OrderProduct"}},
+          "generalObservations": {"type":"string"},
+          "paymentStatus": {"type":"string","enum":["Quitado","Não quitado"]},
+          "paidValue": {"type":"number","minimum":0.01},
+          "paymentForm": {"type":"string","enum":["CREDITO","DEBITO","PIX","DINHEIRO"]}
+        },
+        "required": ["clientId","products"]
       },
       "ErrorResponse": {
         "type": "object",
@@ -143,9 +164,49 @@
       "post": {
         "summary": "Cadastrar produto (admin)",
         "security": [{"bearerAuth":[]}],
-        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref":"#/components/schemas/Product"},
+              "example": {
+                "category": "Roupas",
+                "gender": "Feminino",
+                "type": "Vestido",
+                "subtype": "Longo",
+                "name": "Vestido Azul Elegante",
+                "characteristics": {
+                  "modelo": "Sereia",
+                  "cor": "Azul",
+                  "corte": "Saia solta"
+                },
+                "classification": "Adulto"
+              }
+            }
+          }
+        },
         "responses": {
-          "201": {"description": "Produto criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Product"}}}},
+          "201": {
+            "description": "Produto criado",
+            "content": {
+              "application/json": {
+                "schema": {"$ref":"#/components/schemas/Product"},
+                "example": {
+                  "id": "uuid-gerado",
+                  "category": "Roupas",
+                  "gender": "Feminino",
+                  "type": "Vestido",
+                  "subtype": "Longo",
+                  "name": "Vestido Azul Elegante",
+                  "characteristics": {
+                    "modelo": "Sereia",
+                    "cor": "Azul",
+                    "corte": "Saia solta"
+                  },
+                  "classification": "Adulto"
+                }
+              }
+            }
+          },
           "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
           "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
         }
@@ -235,7 +296,7 @@
       "post": {
         "summary": "Cadastrar pedido (admin/atendente)",
         "security": [{"bearerAuth":[]}],
-        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateOrderRequest"}}}},
         "responses": {
           "201": {"description": "Pedido criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
           "400": {"description": "Dados obrigatórios ausentes ou regras de negócio violadas","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},

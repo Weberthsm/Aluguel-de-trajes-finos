@@ -18,19 +18,31 @@ function create(data, user) {
   if (!data.clientId) throw new Error('clientId obrigatório');
   const client = db.clients.find(c => c.id === data.clientId);
   if (!client) throw new Error('Cliente não encontrado');
+  // Ignora id do input
+  const { id, ...rest } = data;
+  // Valida produtos do pedido
+  const products = (rest.products || []).map(p => {
+    // Ignora id do input do produto do pedido
+    const { id: prodId, ...prodRest } = p;
+    // Valida se produto existe
+    if (!prodRest.productId) throw new Error('productId obrigatório em cada produto do pedido');
+    const prodExists = db.products.find(prod => prod.id === prodRest.productId);
+    if (!prodExists) throw new Error(`Produto não cadastrado: ${prodRest.productId}`);
+    return { id: uuidv4(), ...prodRest };
+  });
   const order = {
     id: uuidv4(),
     orderNumber: db.nextOrderNumber++,
-    orderName: data.orderName || '',
-    clientName: client.name, // agora armazena o nome do cliente
-    eventDate: data.eventDate || null,
-    pickupDateTime: data.pickupDateTime || null,
-    measureDateTime: data.measureDateTime || null,
-    products: (data.products || []).map(p => ({ id: uuidv4(), ...p })),
-    generalObservations: data.generalObservations || '',
-    paymentStatus: data.paymentStatus || 'Não quitado',
-    paidValue: data.paidValue || 0,
-    paymentForm: data.paymentForm || null,
+    orderName: rest.orderName || '',
+    clientName: client.name,
+    eventDate: rest.eventDate || null,
+    pickupDateTime: rest.pickupDateTime || null,
+    measureDateTime: rest.measureDateTime || null,
+    products,
+    generalObservations: rest.generalObservations || '',
+    paymentStatus: rest.paymentStatus || 'Não quitado',
+    paidValue: rest.paidValue || 0,
+    paymentForm: rest.paymentForm || null,
     status: 'Pedido cadastrado',
     createdBy: { id: user.id, username: user.username },
     updatedBy: null,
