@@ -36,7 +36,8 @@
           "id": {"type":"string"},
           "username": {"type":"string"},
           "email": {"type":"string"},
-          "role": {"type":"string","enum":["administrador","atendente","alfaiate"]}
+          "role": {"type":"string","enum":["administrador","atendente","alfaiate"]},
+          "active": {"type":"boolean","description":"Define se o usuário está ativo (pode logar) ou inativo (bloqueado)"}
         }
       },
       "CreateUserRequest": {
@@ -45,7 +46,8 @@
           "username": {"type": "string"},
           "email": {"type": "string"},
           "password": {"type": "string"},
-          "role": {"type": "string", "enum": ["administrador","atendente","alfaiate"]}
+          "role": {"type": "string", "enum": ["administrador","atendente","alfaiate"]},
+          "active": {"type": "boolean","description":"Define se o usuário está ativo (opcional, padrão true)"}
         },
         "required": ["username","email","password","role"]
       },
@@ -155,6 +157,121 @@
         "responses": {
           "201": {"description": "Usuário criado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},
           "400": {"description": "Dados obrigatórios ausentes ou email já cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "get": {
+        "summary": "Listar usuários (apenas admin, sem senha)",
+        "security": [{"bearerAuth":[]}],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários sem senha",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {"$ref": "#/components/schemas/User"}
+                },
+                "example": [
+                  {
+                    "id": "uuid-1",
+                    "username": "weberth.machado",
+                    "email": "admin@local",
+                    "role": "administrador",
+                    "active": true
+                  },
+                  {
+                    "id": "uuid-2",
+                    "username": "atendente1",
+                    "email": "atendente@local",
+                    "role": "atendente",
+                    "active": false
+                  }
+                ]
+              }
+            }
+          },
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      },
+      "put": {
+  "summary": "Editar usuário (admin pode alterar login, senha, perfil, ativo/inativo)",
+  "description": "Apenas administradores podem editar usuários. Toda alteração é registrada em auditLog com data, hora e usuário responsável. O sistema valida se o login/email continua único. Critérios de aceitação: 1) Administrador logado pode editar qualquer campo do usuário, exceto username; 2) O login/email deve permanecer único; 3) Ao salvar, o sistema atualiza o cadastro e registra o histórico de alteração.",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [
+          {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {"type": "string", "description": "Novo email/login do usuário (único)"},
+                  "password": {"type": "string", "description": "Nova senha do usuário"},
+                  "role": {"type": "string", "enum": ["administrador","atendente","alfaiate"], "description": "Novo perfil do usuário"},
+                  "active": {"type": "boolean", "description": "Define se o usuário está ativo ou inativo"}
+                }
+              },
+              "example": {
+                "email": "novo@email.com",
+                "password": "novaSenha123",
+                "role": "atendente",
+                "active": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com histórico de auditoria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {"type": "string"},
+                    "username": {"type": "string"},
+                    "email": {"type": "string"},
+                    "role": {"type": "string"},
+                    "active": {"type": "boolean"},
+                    "auditLog": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "when": {"type": "string", "format": "date-time"},
+                          "by": {"type": "string"},
+                          "changes": {"type": "object"}
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "id": "uuid-2",
+                  "username": "novo.login",
+                  "email": "novo@email.com",
+                  "role": "atendente",
+                  "active": true,
+                  "auditLog": [
+                    {
+                      "when": "2025-11-02T15:00:00.000Z",
+                      "by": "weberth.machado",
+                      "changes": {
+                        "email": {"from": "atendente@local", "to": "novo@email.com"},
+                        "active": {"from": false, "to": true}
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {"description": "Email já cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "404": {"description": "Usuário não encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
           "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
           "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
         }

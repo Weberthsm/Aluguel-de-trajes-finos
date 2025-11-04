@@ -5,7 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'change_this_secret';
 
 function generateToken(user) {
   const payload = { id: user.id, role: user.role, username: user.username, email: user.email };
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '2h' });
 }
 
 function verifyToken(req, res, next) {

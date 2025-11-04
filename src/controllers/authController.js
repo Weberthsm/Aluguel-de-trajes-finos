@@ -6,8 +6,9 @@ async function login(req, res) {
   if (!email || !password) return res.status(400).json({error:'email e password são obrigatórios'});
   const user = userService.findByEmail(email);
   if (!user || user.password !== password) return res.status(401).json({error:'Credenciais inválidas'});
+  if (user.active === false) return res.status(403).json({error:'Usuário inativo'});
   const token = generateToken(user);
-  res.json({ token, user: { id: user.id, username: user.username, role: user.role, email: user.email } });
+  res.json({ token, user: { id: user.id, username: user.username, role: user.role, email: user.email, active: user.active } });
 }
 
 module.exports = { login };
