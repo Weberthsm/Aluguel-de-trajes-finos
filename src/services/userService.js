@@ -1,7 +1,8 @@
 const db = require('../models/db');
 const { v4: uuidv4 } = require('uuid');
 
-function createUser({ username, email, password, role }) {
+function createUser({ id, username, email, password, role }) {
+  // Ignora id do input
   const user = { id: uuidv4(), username, email, password, role };
   db.users.push(user);
   return user;

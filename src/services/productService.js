@@ -2,7 +2,9 @@ const db = require('../models/db');
 const { v4: uuidv4 } = require('uuid');
 
 function create(data) {
-  const p = { id: uuidv4(), ...data };
+  // Ignora id do input
+  const { id, ...rest } = data;
+  const p = { id: uuidv4(), ...rest };
   db.products.push(p);
   return p;
 }
