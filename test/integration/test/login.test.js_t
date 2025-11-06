@@ -1,18 +1,18 @@
 const request = require('supertest');
 const { expect } = require('chai');
 require('dotenv').config();
-const postUsersLogin = require('../../fixtures/postUsersLogin.json');
+const postAuthLogin = require('../fixtures/login/postAuthLogin.json');
 
 describe('Login', () => {
-    describe('/POST /users/login', () => {
+    describe('/POST /auth/login', () => {
         it('Deve retornar 200 com um token em string quando usar credenciais válidas', async () => {
 
-            const bodyUsersLogin = { ...postUsersLogin }
+            const bodyAuthLogin = { ...postAuthLogin }
 
             const response = await request(process.env.BASE_URL)
-                .post('/users/login')
+                .post('/auth/login')
                 .set('content-type', 'application/json')
-                .send(bodyUsersLogin)
+                .send(bodyAuthLogin)
 
             expect(response.status).to.equal(200);
             expect(response.body.token).to.be.a('string');
@@ -21,23 +21,22 @@ describe('Login', () => {
 
         it('Deve retornar 400 quando não informar usuário ou senha', async () => {
             const response = await request(process.env.BASE_URL)
-                .post('/users/login')
+                .post('/auth/login')
                 .set('Content-Type', 'application/json')
                 .send({})
-
             expect(response.status).to.equal(400)
-            expect(response.body.error).to.equal('Usuário e senha obrigatórios')
+            expect(response.body.error).to.equal('email e password são obrigatórios')
         });
 
-        it('Deve retornar 400 quando usuário não estiver cadastrado', async () => {
+        it('Deve retornar 401 quando usuário não estiver cadastrado', async () => {
             const response = await request(process.env.BASE_URL)
-                .post('/users/login')
+                .post('/auth/login')
                 .set('Content-Type', 'application/json')
-                .send({ username: 'usuarioInexistente', password: '654321' })
-
-            expect(response.status).to.equal(400)
+                .send({ email: 'usuarioInexistente', password: '654321' })
+            console.log("erro foi:" + JSON.stringify(response.body));
+            expect(response.status).to.equal(401)
             expect(response.body).to.have.property('error')
-            expect(response.body.error).to.equal('Usuário não encontrado')
+            expect(response.body.error).to.equal('Credenciais inválidas')
         })
 
 

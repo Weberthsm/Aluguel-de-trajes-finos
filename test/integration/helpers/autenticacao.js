@@ -1,25 +1,25 @@
 const request = require('supertest');
 require('dotenv').config();
-const postUsersLogin = require('../fixtures/postUsersLogin.json');
+const postAuthLogin = require('../fixtures/login/postAuthLogin.json');
 
 
 const obterToken = async (usuario, senha)=>{
    
-    const bodyUsersLogin = {...postUsersLogin}
+    const bodyAuthLogin = {...postAuthLogin}
     
 
     
     if(usuario && senha){
-        bodyUsersLogin.username = usuario;
-        bodyUsersLogin.password = senha
+        bodyAuthLogin.email = usuario;
+        bodyAuthLogin.password = senha
     }
-    
-    const responseUserslogin = await request(process.env.BASE_URL)
-                            .post('/users/login')
+
+    const responseAuthLogin = await request(process.env.BASE_URL)
+                            .post('/auth/login')
                             .set('content-type','application/json')
-                            .send(bodyUsersLogin) 
+                            .send(bodyAuthLogin) 
                     
-                return responseUserslogin.body.token;
+                return responseAuthLogin.body.token;
     
 }
 
