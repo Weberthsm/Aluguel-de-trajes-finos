@@ -1,0 +1,37 @@
+[
+	{
+		"username": "user.alfaiate",
+		"email": "useralfaiate@mail.com",
+		"password": "123456",
+		"role": "alfaiate",
+		"active": true
+	},
+	{
+		"username": "user.admin",
+		"email": "useradmin@mail.com",
+		"password": "123456",
+		"role": "administrador",
+		"active": true
+	},
+	{
+		"username": "user.atendente",
+		"email": "useratendente@mail.com",
+		"password": "123456",
+		"role": "atendente",
+		"active": true
+	},
+	{
+		"username": "usuario.inativo",
+		"email": "userinativo@mail.com",
+		"password": "123456",
+		"role": "atendente",
+		"active": false
+	},
+	{
+		"username": "perfil.inexistente",
+		"email": "perfilinexistente@mail.com",
+		"password": "123456",
+		"role": "perfilinexistente",
+		"active": true
+	}
+]
