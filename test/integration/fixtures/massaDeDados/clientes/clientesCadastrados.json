@@ -1,0 +1,66 @@
+[
+  {
+    "id": "b1cedaf3-eb64-4f21-bfb3-0f599405bf8e",
+    "name": "Larissa Fernanda Joana Nunes",
+    "cpf_cnpj": "808.447.839-78",
+    "phones": [
+      "(86) 3545-1372",
+      "(86) 99742-7619"
+    ],
+    "cep": "64052-315",
+    "state": "PI",
+    "city": "Teresina",
+    "logradouro": "Rua Domingos Cordeiro",
+    "numero": "150",
+    "active": true,
+    "typePessoa": "Física"
+  },
+  {
+    "id": "8f7b429f-2cb9-4d75-b930-46822eb92329",
+    "name": "Regina Stefany dos Santos",
+    "cpf_cnpj": "915.528.300-47",
+    "phones": [
+      "(86) 3525-1872",
+      "(86) 99772-7619"
+    ],
+    "cep": "57045-260",
+    "state": "AL",
+    "city": "Teresina",
+    "logradouro": "Rua Silvio Sandes Torres Júnior",
+    "numero": "966",
+    "active": true,
+    "typePessoa": "Física"
+  },
+  {
+    "id": "c1c66e05-e831-4763-b262-7991eaba6f1f",
+    "name": "pessoa inativa da silva",
+    "cpf_cnpj": "817.553.179-72",
+    "phones": [
+      "(86) 3525-1872",
+      "(86) 99772-7619"
+    ],
+    "cep": "57045-260",
+    "state": "AL",
+    "city": "Teresina",
+    "logradouro": "Rua Silvio Sandes Torres Júnior",
+    "numero": "966",
+    "active": false,
+    "typePessoa": "Física"
+  },
+  {
+    "id": "26ebf234-1a77-4823-b53a-81099a2aaaab",
+    "name": "Jullieth Santos",
+    "cpf_cnpj": "069.324.564-60",
+    "phones": [
+      "(86) 3525-1872",
+      "(86) 99772-7619"
+    ],
+    "cep": "57045-260",
+    "state": "MG",
+    "city": "Montes Claros",
+    "logradouro": "Rua Silvio Sandes Torres Júnior",
+    "numero": "966",
+    "active": true,
+    "typePessoa": "Física"
+  }
+]

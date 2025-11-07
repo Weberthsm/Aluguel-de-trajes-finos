@@ -9,6 +9,12 @@ router.post('/', verifyToken, authorizeRoles('administrador','atendente'), (req,
   res.status(201).json(created);
 });
 
+// List all clients (administrador, atendente)
+router.get('/', verifyToken, authorizeRoles('administrador','atendente'), (req, res) => {
+  const list = clientService.list();
+  res.json(list);
+});
+
 router.get('/:id', verifyToken, authorizeRoles('administrador','atendente'), (req, res) => {
   const client = clientService.get(req.params.id);
   if (!client) return res.status(404).json({error:'Cliente não encontrado'});
