@@ -107,6 +107,8 @@ function create(data) {
 
 function get(id) { return db.clients.find(c => c.id === id); }
 
+function list() { return db.clients; }
+
 function update(id, data) {
   const idx = db.clients.findIndex(c => c.id === id);
   if (idx === -1) return null;
@@ -145,4 +147,4 @@ function update(id, data) {
   return db.clients[idx];
 }
 
-module.exports = { create, get, update };
+module.exports = { create, get, update, list };

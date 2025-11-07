@@ -1,0 +1,134 @@
+[
+	{
+		"id": "c2aad440-06e6-4f43-8c1c-9de7c498637e",
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Calça",
+		"name": "Calça Social Preta - pessoa inativa",
+		"characteristics": {
+			"tamanho": "42",
+			"cor": "Preto",
+			"tipoTecido": "Gabardine"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "2d12eeba-7f03-49be-b86a-b0c67a6824de",
+		"category": "Roupas",
+		"gender": "Feminino",
+		"type": "Vestido",
+		"subtype": "Longo",
+		"name": "Vestido Longo Azul Sereia - Jullieth",
+		"characteristics": {
+			"modelo": "Sereia",
+			"cor": "Azul",
+			"corte": "Saia justa"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "b4e2d0f3-2c5f-4a7b-8d3e-1b2c3d4e5f6a",
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Camisa",
+		"name": "Camisa Social Branca",
+		"characteristics": {
+			"tamanho": "M",
+			"cor": "Branco",
+			"manga": "Longa"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "c5f3e1a4-3d6a-4b8c-9e4f-2c3d4e5f6a7b",
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Blazer",
+		"name": "Blazer Cinza Chumbo",
+		"characteristics": {
+			"tamanho": "50",
+			"cor": "Cinza",
+			"tecido": "Lã"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "d6a4f2b5-4e7b-4c9d-0f5a-3d4e5f6a7b8c",
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Gravata",
+		"name": "Gravata Tradicional Vermelha",
+		"characteristics": {
+			"estilo": "Tradicional",
+			"cor": "Vermelho",
+			"marca": "Classic"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "e7b5g3c6-5f8c-4d0e-1a6b-4e5f6a7b8c9d",
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Gravata",
+		"name": "Borboleta Azul Marinho",
+		"characteristics": {
+			"estilo": "Borboleta",
+			"cor": "Azul Marinho",
+			"marca": "Elegance"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "09d7i5e8-7h0e-4f2g-3c8d-6a7b8c9d0e1f",
+		"category": "Roupas",
+		"gender": "Feminino",
+		"type": "Vestido",
+		"subtype": "Curto",
+		"name": "Vestido Curto Vermelho",
+		"characteristics": {
+			"modelo": "Saia solta",
+			"cor": "Vermelho",
+			"corte": "Evasê"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "10e8j6f9-8i1f-4g3h-4d9e-7b8c9d0e1f2a",
+		"category": "Acessórios",
+		"gender": "Feminino",
+		"type": "Bolsa",
+		"name": "Clutch Dourada",
+		"characteristics": {
+			"cor": "Dourado",
+			"marca": "Luxo",
+			"material": "Sintético"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "21f9k7g0-9j2g-4h4i-5e0f-8c9d0e1f2a3b",
+		"category": "Acessórios",
+		"gender": "Feminino",
+		"type": "Sandália",
+		"name": "Sandália Salto Alto Preta",
+		"characteristics": {
+			"cor": "Preto",
+			"tamanho": "38",
+			"marca": "Glam"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"id": "32g0l8h1-0k3h-4i5j-6f1g-9d0e1f2a3b4c",
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Colete",
+		"name": "Colete Preto Formal",
+		"characteristics": {
+			"tamanho": "M",
+			"cor": "Preto",
+			"forro": "Seda"
+		},
+		"classification": "Adulto"
+	}
+]

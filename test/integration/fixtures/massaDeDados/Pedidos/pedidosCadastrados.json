@@ -1,0 +1,38 @@
+{
+  "orderName": "4 Vestido Sereia Jullieth Santos",
+  "clientId": "26ebf234-1a77-4823-b53a-81099a2aaaab",
+  "eventDate": "2026-05-15",
+  "pickupDateTime": "2026-05-14T18:00:00Z",
+  "measureDateTime": "2026-04-20T10:00:00Z",
+  "products": [
+    {
+      "productId": "2d12eeba-7f03-49be-b86a-b0c67a6824de",
+      "quantity": 1,
+      "needsAdjustment": true,
+      "adjustmentsDescription": "Ajustar barra 4"
+    }
+  ],
+  "generalObservations": "Cliente levará o salto no dia da prova.",
+  "paymentStatus": "qualquerUm",
+  "paidValue": 0,
+  "paymentForm": null
+},
+{
+  "orderName": "Calça Social Preta - pessoa inativa",
+  "clientId": "c1c66e05-e831-4763-b262-7991eaba6f1f",
+  "eventDate": "2026-05-15",
+  "pickupDateTime": "2026-05-14T18:00:00Z",
+  "measureDateTime": "2026-04-20T10:00:00Z",
+  "products": [
+    {
+      "productId": "c2aad440-06e6-4f43-8c1c-9de7c498637e",
+      "quantity": 1,
+      "needsAdjustment": true,
+      "adjustmentsDescription": "Ajustar barra 4"
+    }
+  ],
+  "generalObservations": "Cliente levará o salto no dia da prova.",
+  "paymentStatus": "Quitado",
+  "paidValue": 10,
+  "paymentForm": ["DINHEIRO"]
+}

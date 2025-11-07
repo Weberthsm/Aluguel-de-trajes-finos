@@ -1,0 +1,167 @@
+[
+	{
+		"category": "Roupas",
+		"gender": "Feminino",
+		"type": "Vestido",
+		"subtype": "Longo",
+		"name": "Vestido Azul Elegante",
+		"characteristics": {
+			"modelo": "Sereia",
+			"cor": "Azul",
+			"corte": "Saia solta"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Calça",
+		"name": "Calça Social Preta",
+		"characteristics": {
+			"tamanho": "42",
+			"cor": "Preto",
+			"tipoTecido": "Gabardine"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Acessórios",
+		"gender": "Feminino",
+		"type": "Bolsa",
+		"name": "Clutch Dourada",
+		"characteristics": {
+			"cor": "Dourado",
+			"marca": "Luxo"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Calça",
+		"name": "Calça Social Preta",
+		"characteristics": {
+			"tamanho": "42",
+			"cor": "Preto",
+			"tipoTecido": "Gabardine"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Camisa",
+		"name": "Camisa Social Branca",
+		"characteristics": {
+			"tamanho": "M",
+			"cor": "Branco",
+			"manga": "Longa",
+			"tecido": "Algodão"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Blazer",
+		"name": "Blazer Cinza Chumbo",
+		"characteristics": {
+			"tamanho": "50",
+			"cor": "Cinza",
+			"tecido": "Lã",
+			"forro": "Seda"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Gravata",
+		"name": "Gravata Tradicional Vermelha",
+		"characteristics": {
+			"estilo": "Tradicional",
+			"cor": "Vermelho",
+			"marca": "Classic"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Feminino",
+		"type": "Vestido",
+		"subtype": "Longo",
+		"name": "Vestido Longo Azul Sereia",
+		"characteristics": {
+			"modelo": "Sereia",
+			"cor": "Azul",
+			"corte": "Saia justa",
+			"tecido": "Chiffon"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Feminino",
+		"type": "Vestido",
+		"subtype": "Curto",
+		"name": "Vestido Curto Vermelho",
+		"characteristics": {
+			"modelo": "Saia solta",
+			"cor": "Vermelho",
+			"corte": "Evasê",
+			"tamanho": "P"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Acessórios",
+		"gender": "Feminino",
+		"type": "Bolsa",
+		"name": "Clutch Dourada",
+		"characteristics": {
+			"cor": "Dourado",
+			"marca": "Luxo",
+			"material": "Sintético"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Acessórios",
+		"gender": "Feminino",
+		"type": "Sandália",
+		"name": "Sandália Salto Alto Preta",
+		"characteristics": {
+			"cor": "Preto",
+			"tamanho": "38",
+			"marca": "Glam",
+			"saltoAlturaCm": 9
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Masculino",
+		"type": "Colete",
+		"name": "Colete Preto Formal",
+		"characteristics": {
+			"tamanho": "M",
+			"cor": "Preto",
+			"forro": "Cetim"
+		},
+		"classification": "Adulto"
+	},
+	{
+		"category": "Roupas",
+		"gender": "Infantil",
+		"type": "Vestido",
+		"subtype": "Curto",
+		"name": "Vestido Infantil Floral",
+		"characteristics": {
+			"modelo": "Saia solta",
+			"cor": "Rosa",
+			"corte": "Evasê",
+			"tamanho": "8"
+		},
+		"classification": "Infantil"
+	}
+]

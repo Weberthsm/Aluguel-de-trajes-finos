@@ -83,12 +83,12 @@
       "OrderProduct": {
         "type": "object",
         "properties": {
-          "productId": {"type":"string"},
-          "description": {"type":"string"},
-          "adjustments": {"type":"string"},
-          "characteristics": {"type":"object"}
+          "productId": {"type":"string","format":"uuid","description":"UUID do produto cadastrado (obrigatório)"},
+          "quantity": {"type":"integer","minimum":1,"description":"Quantidade do produto neste pedido"},
+          "needsAdjustment": {"type":"boolean","description":"Indica se o produto precisa de ajuste"},
+          "adjustmentsDescription": {"type":["string","null"],"description":"Descrição dos ajustes solicitados (pode ser null)"}
         },
-        "required": ["productId"]
+        "required": ["productId","quantity"]
       },
       "Order": {
         "type": "object",
@@ -122,11 +122,40 @@
           "measureDateTime": {"type":"string","format":"date-time"},
           "products": {"type":"array","items":{"$ref":"#/components/schemas/OrderProduct"}},
           "generalObservations": {"type":"string"},
-          "paymentStatus": {"type":"string","enum":["Quitado","Não quitado"]},
-          "paidValue": {"type":"number","minimum":0.01},
-          "paymentForm": {"type":"string","enum":["CREDITO","DEBITO","PIX","DINHEIRO"]}
+          "paymentStatus": {"type":"string","enum":["Quitado","Não quitado"],"description":"Indica se o pedido está quitado"},
+          "paidValue": {"type":"number","minimum":0,"description":"Valor efetivamente pago (0 se nenhum pagamento)"},
+          "paymentForm": {"type":"string","enum":["CREDITO","DEBITO","PIX","DINHEIRO"],"description":"Forma de pagamento (opcional)"}
         },
-        "required": ["clientId","products"]
+        "required": ["clientId","products"],
+        "example": {
+          "orderName": "Casamento Silva - Corte Rápido",
+          "clientId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+          "eventDate": "2026-05-15",
+          "pickupDateTime": "2026-05-14T18:00:00Z",
+          "measureDateTime": "2026-04-20T10:00:00Z",
+          "products": [
+            { "productId": "a1b2c3d4-e5f6-47a8-9b0c-1234567890ab", "quantity": 1, "needsAdjustment": true, "adjustmentsDescription": "Ajustar bainha e cintura" }
+          ],
+          "generalObservations": "Cliente prefere tecido antialérgico se houver substituição.",
+          "paymentStatus": "Não quitado",
+          "paidValue": 0,
+          "paymentForm": null
+        }
+      },
+      "UpdateOrderRequest": {
+        "type": "object",
+        "properties": {
+          "orderName": {"type":"string"},
+          "eventDate": {"type":"string","format":"date"},
+          "pickupDateTime": {"type":"string","format":"date-time"},
+          "measureDateTime": {"type":"string","format":"date-time"},
+          "products": {"type":"array","items":{"$ref":"#/components/schemas/OrderProduct"}},
+          "generalObservations": {"type":"string"},
+          "paymentStatus": {"type":"string","enum":["Quitado","Não quitado"]},
+          "paidValue": {"type":"number","minimum":0},
+          "paymentForm": {"type":"string","enum":["CREDITO","DEBITO","PIX","DINHEIRO"]},
+          "status": {"type":"string","enum":["Pedido cadastrado","Na costura","Fazendo","Entregar para o cliente","Entregue para o cliente","Devolvido pelo cliente","Cancelado"]}
+        }
       },
       "ErrorResponse": {
         "type": "object",
@@ -374,6 +403,16 @@
           "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
         }
       }
+      ,
+      "get": {
+        "summary": "Listar clientes (apenas admin/atendente)",
+        "security": [{"bearerAuth":[]}],
+        "responses": {
+          "200": {"description": "Lista de clientes","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Client"}}}}},
+          "401": {"description": "Não autenticado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "403": {"description": "Acesso negado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}}
+        }
+      }
     },
     "/clients/{id}": {
       "get": {
@@ -438,7 +477,7 @@
         "summary": "Editar pedido (admin/atendente)",
         "security": [{"bearerAuth":[]}],
         "parameters": [{"name":"id","in":"path","required":true,"schema":{"type":"string"}}],
-        "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
+  "requestBody": {"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateOrderRequest"}}}},
         "responses": {
           "200": {"description": "Pedido atualizado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Order"}}}},
           "400": {"description": "Regras de negócio violadas","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
